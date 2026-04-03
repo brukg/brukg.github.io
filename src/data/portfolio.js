@@ -23,10 +23,10 @@ export const portfolioData = {
     technical: {
       "Navigation & SLAM": ["RTABMAP", "CARTOGRAPHER", "AMCL", "ISAAC-VSLAM", "KISS-ICP", "Nav2"],
       "Planning & Control": ["MoveIt", "RRT", "PRM", "A*", "DWA", "MPPI", "MPC", "Pure Pursuit"],
-      "ML & Vision": ["OWL-ViT", "YOLO", "SAM", "CNNs", "TensorRT", "VLA Models"],
+      "ML & Vision": ["OWL-ViT", "YOLO", "SAM", "CNNs", "TensorRT"],
       "Simulation": ["Isaac Sim", "Isaac Lab", "Gazebo", "PyBullet"],
-      "Hardware": ["NVIDIA Jetson (Xavier, Orin)", "LiDAR", "IMU", "Stereo Vision", "CANopen"],
-      "Frameworks": ["ACT", "OpenPI", "SmolVLA", "XVLA", "Gr00t"],
+      "Hardware": ["NVIDIA Jetson (Xavier, Orin)", "LiDAR", "IMU", "Stereo Vision", "CANopen", "VTOL"],
+      "VLA Frameworks": ["ACT", "OpenPI", "SmolVLA", "XVLA", "Gr00t"],
     }
   },
 
