@@ -363,6 +363,44 @@ function Projects() {
             </div>
           ))}
         </div>
+
+        {demos && demos.length > 0 && (
+          <>
+            <h3 className="text-xl font-semibold text-[var(--text-primary)] mt-16 mb-8 flex items-center gap-4">
+              Featured Demos
+              <div className="flex-1 h-px bg-[var(--border)] ml-4" />
+            </h3>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {demos.map((demo, index) => (
+                <div
+                  key={index}
+                  className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 card-hover"
+                >
+                  <VideoEmbed videoUrl={demo.videoUrl} />
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mt-4 mb-2">
+                    {demo.title}
+                  </h3>
+                  <p className="text-[var(--text-secondary)] text-sm mb-4 leading-relaxed">
+                    {demo.description}
+                  </p>
+                  {demo.tags && (
+                    <div className="flex flex-wrap gap-2">
+                      {demo.tags.map((tag, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-1 text-xs font-mono text-[var(--text-tertiary)] bg-[var(--bg-inner)] rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
