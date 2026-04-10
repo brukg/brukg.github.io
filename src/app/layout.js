@@ -1,4 +1,8 @@
 import './globals.css'
+import { THEME, themes } from '../data/themes'
+
+const themeVars = themes[THEME] || themes.teal;
+const themeStyle = `:root { ${Object.entries(themeVars).map(([k, v]) => `${k}: ${v}`).join('; ')}; }`;
 
 export const metadata = {
   title: 'Bruk Gebregziabher | Robotics & AI Engineer',
@@ -15,8 +19,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <style dangerouslySetInnerHTML={{ __html: themeStyle }} />
+      </head>
       <body className="bg-grid min-h-screen">
-        <div className="fixed inset-0 bg-gradient-to-br from-[#00d4aa10] via-transparent to-[#1a003010] pointer-events-none" />
+        <div className="fixed inset-0 bg-gradient-to-br from-[var(--accent-dim)] via-transparent to-transparent pointer-events-none" />
         {children}
       </body>
     </html>

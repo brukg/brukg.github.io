@@ -13,7 +13,7 @@ export const portfolioData = {
 
   skills: {
     primary: [
-      { name: "ROS2 / ROS", category: "Robotics" },
+      { name: "ROS2", category: "Robotics" },
       { name: "Python", category: "Programming" },
       { name: "C++", category: "Programming" },
       { name: "SLAM", category: "Navigation" },
@@ -77,17 +77,17 @@ export const portfolioData = {
         "Enabled implementation of precise control algorithms reducing jerk in forklift operations"
       ]
     },
-    {
-      title: "Summer Internship - AI Task Planning",
-      company: "ViCOROB - University of Girona",
-      location: "Girona, Spain",
-      period: "Jun 2022 – Aug 2022",
-      highlights: [
-        "Developed AI-driven task planning algorithms using PDDL and Behaviour Trees",
-        "Worked on Girona 500 AUV with dual robotic arms for underwater inspection",
-        "Enhanced AUV's ability to perform complex inspection tasks autonomously"
-      ]
-    },
+    // {
+    //   title: "Summer Internship - AI Task Planning",
+    //   company: "ViCOROB - University of Girona",
+    //   location: "Girona, Spain",
+    //   period: "Jun 2022 – Aug 2022",
+    //   highlights: [
+    //     "Developed AI-driven task planning algorithms using PDDL and Behaviour Trees",
+    //     "Worked on Girona 500 AUV with dual robotic arms for underwater inspection",
+    //     "Enhanced AUV's ability to perform complex inspection tasks autonomously"
+    //   ]
+    // },
     {
       title: "CEO & Founder",
       company: "Signal Technologies",
@@ -96,6 +96,15 @@ export const portfolioData = {
       highlights: [
         "Founded and led software development startup",
         "Managed team and led technical projects"
+      ]
+    },
+    {
+      title: "Senior Software Engineer and Team Lead",
+      company: "Swarm Cybersecurity",
+      location: "Mekelle, Ethiopia",
+      period: "Apr 2019 – Apr 2021",
+      highlights: [
+        "Led PaaS development for national digital identity management system"
       ]
     },
     {
@@ -115,16 +124,12 @@ export const portfolioData = {
       degree: "M.Sc. Intelligent Field Robotic Systems",
       specialization: "Multi-Robot Systems and Aerial Robotics",
       institution: "University of Girona & University of Zagreb (IFRoS)",
-      period: "2021 – 2023",
-      gpa: "8.86/10 CGPA",
       thesis: "Multi Object Tracking for Predictive Collision Avoidance",
       coursework: ["Computer Vision", "Manipulation", "Probabilistic Robotics", "Task/Motion Planning", "Machine Learning", "Aerial Robotics", "Multi Robot Systems"]
     },
     {
       degree: "B.Sc. Computer Science and Engineering",
       institution: "Mekelle Institute of Technology - Mekelle University",
-      period: "2012 – 2017",
-      gpa: "3.93/4.0 CGPA",
       coursework: ["Embedded Systems", "C/C++", "Microcontrollers", "Digital Electronics", "Operating Systems", "Probability Theory", "Numerical Methods"]
     }
   ],
@@ -135,6 +140,18 @@ export const portfolioData = {
       venue: "2025 IEEE International Conference on Robotics and Automation (ICRA)",
       year: "2025",
       type: "Conference"
+    },
+    {
+      title: "Motion as a Sensing Modality for Metric Scale in Monocular Visual-Inertial Odometry",
+      venue: "Preprint",
+      year: "2024",
+      type: "Preprint"
+    },
+    {
+      title: "OPTED: Open Preprocessed Trachoma Eye Dataset Using Zero-Shot SAM 3 Segmentation",
+      venue: "Preprint",
+      year: "2024",
+      type: "Preprint"
     },
     {
       title: "Forecast-Driven MPC for Decentralized Multi-Robot Collision Avoidance",

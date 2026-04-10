@@ -46,7 +46,79 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
     </svg>
   ),
+  Play: () => (
+    <svg className="w-8 h-8 text-[var(--bg-body)] ml-1" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  ),
 };
+
+// Video Embed Component (click-to-load for performance)
+function VideoEmbed({ videoUrl }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const getVideoInfo = (url) => {
+    if (!url) return null;
+    const ytMatch = url.match(
+      /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    );
+    if (ytMatch) return { platform: 'youtube', id: ytMatch[1] };
+
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) return { platform: 'vimeo', id: vimeoMatch[1] };
+
+    return null;
+  };
+
+  const video = getVideoInfo(videoUrl);
+  if (!video) return null;
+
+  const embedUrl = video.platform === 'youtube'
+    ? `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1`
+    : `https://player.vimeo.com/video/${video.id}?autoplay=1`;
+
+  const thumbnailUrl = video.platform === 'youtube'
+    ? `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
+    : null;
+
+  if (isPlaying) {
+    return (
+      <div className="aspect-video relative rounded-md overflow-hidden">
+        <iframe
+          src={embedUrl}
+          className="absolute inset-0 w-full h-full"
+          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+          allowFullScreen
+          title="Video demo"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="aspect-video relative rounded-md overflow-hidden cursor-pointer group/video bg-[var(--bg-inner)]"
+      onClick={() => setIsPlaying(true)}
+    >
+      {thumbnailUrl ? (
+        <img
+          src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
+          onError={(e) => { e.target.src = thumbnailUrl; }}
+          alt="Video thumbnail"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-inner)] to-[var(--bg-card)]" />
+      )}
+      <div className="absolute inset-0 bg-black/40 group-hover/video:bg-black/20 transition-colors flex items-center justify-center">
+        <div className="w-14 h-14 rounded-full bg-[var(--accent-90)] group-hover/video:bg-[var(--accent)] group-hover/video:scale-110 transition-all flex items-center justify-center">
+          <Icons.Play />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Navigation Component
 function Navigation() {
@@ -54,11 +126,11 @@ function Navigation() {
   const navItems = ['About', 'Experience', 'Projects', 'Publications', 'Skills', 'Contact'];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-lg border-b border-[#252530]">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--bg-body-80)] backdrop-blur-lg border-b border-[var(--border)]">
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <a href="#" className="font-mono text-[#00d4aa] font-semibold text-lg">
-            BG<span className="text-[#606070]">.</span>
+          <a href="#" className="font-mono text-[var(--accent)] font-semibold text-lg">
+            BG<span className="text-[var(--text-tertiary)]">.</span>
           </a>
           
           {/* Desktop Navigation */}
@@ -67,14 +139,14 @@ function Navigation() {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="nav-link text-sm text-[#a0a0b0] hover:text-[#00d4aa] transition-colors"
+                className="nav-link text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
               >
                 {item}
               </a>
             ))}
             <a
               href="/CV_Bruk_Gebregziabher.pdf"
-              className="flex items-center gap-2 px-4 py-2 border border-[#00d4aa] text-[#00d4aa] rounded hover:bg-[#00d4aa]/10 transition-colors text-sm"
+              className="flex items-center gap-2 px-4 py-2 border border-[var(--accent)] text-[var(--accent)] rounded hover:bg-[var(--accent-dim)] transition-colors text-sm"
             >
               <Icons.Download />
               Resume
@@ -83,7 +155,7 @@ function Navigation() {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden text-[#a0a0b0]"
+            className="md:hidden text-[var(--text-secondary)]"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <Icons.Close /> : <Icons.Menu />}
@@ -92,12 +164,12 @@ function Navigation() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-[#252530] pt-4">
+          <div className="md:hidden mt-4 pb-4 border-t border-[var(--border)] pt-4">
             {navItems.map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="block py-2 text-[#a0a0b0] hover:text-[#00d4aa] transition-colors"
+                className="block py-2 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {item}
@@ -112,34 +184,45 @@ function Navigation() {
 
 // Hero Section
 function Hero() {
-  const { personal } = portfolioData;
+  const { personal, skills } = portfolioData;
   
   return (
     <section id="about" className="min-h-screen flex items-center pt-20">
       <div className="max-w-6xl mx-auto px-6 py-20">
         <div className="animate-fade-in-up">
-          <p className="font-mono text-[#00d4aa] mb-4">Hi, my name is</p>
-          <h1 className="text-5xl md:text-7xl font-bold text-[#f0f0f5] mb-4">
+          <p className="font-mono text-[var(--accent)] mb-4">Hi, my name is</p>
+          <h1 className="text-5xl md:text-7xl font-bold text-[var(--text-primary)] mb-4">
             {personal.name}
           </h1>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#606070] mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-[var(--text-tertiary)] mb-6">
             {personal.title}
           </h2>
-          <p className="text-lg text-[#a0a0b0] max-w-2xl mb-4">
+          <p className="text-lg text-[var(--text-secondary)] max-w-2xl mb-4">
             {personal.subtitle}
           </p>
-          <p className="text-[#a0a0b0] max-w-2xl mb-8 leading-relaxed">
+          <p className="text-[var(--text-secondary)] max-w-2xl mb-6 leading-relaxed">
             {personal.summary}
           </p>
-          
+
+          <div className="flex flex-wrap gap-2 mb-8">
+            {skills.primary.map((skill, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 text-sm font-mono text-[var(--accent)] bg-[var(--accent-dim)] border border-[var(--accent-dim)] rounded"
+              >
+                {skill.name}
+              </span>
+            ))}
+          </div>
+
           <div className="flex flex-wrap items-center gap-4 mb-8">
-            <div className="flex items-center gap-2 text-[#a0a0b0]">
+            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
               <Icons.Location />
               <span>{personal.location}</span>
             </div>
             <a 
               href={`mailto:${personal.email}`}
-              className="flex items-center gap-2 text-[#a0a0b0] hover:text-[#00d4aa] transition-colors"
+              className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
             >
               <Icons.Email />
               <span>{personal.email}</span>
@@ -151,7 +234,7 @@ function Hero() {
               href={personal.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 border border-[#252530] rounded-lg text-[#a0a0b0] hover:text-[#00d4aa] hover:border-[#00d4aa] transition-all"
+              className="p-3 border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all"
             >
               <Icons.LinkedIn />
             </a>
@@ -159,13 +242,13 @@ function Hero() {
               href={personal.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 border border-[#252530] rounded-lg text-[#a0a0b0] hover:text-[#00d4aa] hover:border-[#00d4aa] transition-all"
+              className="p-3 border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all"
             >
               <Icons.GitHub />
             </a>
             <a
               href="#contact"
-              className="px-6 py-3 bg-[#00d4aa] text-[#0a0a0f] font-semibold rounded-lg hover:bg-[#00b090] transition-colors"
+              className="px-6 py-3 bg-[var(--accent)] text-[var(--bg-body)] font-semibold rounded-lg hover:bg-[var(--accent-hover)] transition-colors"
             >
               Get In Touch
             </a>
@@ -183,32 +266,32 @@ function Experience() {
   return (
     <section id="experience" className="py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#f0f0f5] mb-12 flex items-center gap-4">
-          <span className="font-mono text-[#00d4aa] text-xl">01.</span>
+        <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-12 flex items-center gap-4">
+          <span className="font-mono text-[var(--accent)] text-xl">01.</span>
           Experience
-          <div className="flex-1 h-px bg-[#252530] ml-4" />
+          <div className="flex-1 h-px bg-[var(--border)] ml-4" />
         </h2>
 
         <div className="space-y-12">
           {experience.map((job, index) => (
             <div key={index} className="timeline-item">
-              <div className="bg-[#12121a] border border-[#252530] rounded-lg p-6 card-hover">
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 card-hover">
                 <div className="flex flex-wrap justify-between items-start gap-2 mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-[#f0f0f5]">
+                    <h3 className="text-xl font-semibold text-[var(--text-primary)]">
                       {job.title}
                     </h3>
-                    <p className="text-[#00d4aa] font-medium">{job.company}</p>
+                    <p className="text-[var(--accent)] font-medium">{job.company}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono text-sm text-[#a0a0b0]">{job.period}</p>
-                    <p className="text-sm text-[#606070]">{job.location}</p>
+                    <p className="font-mono text-sm text-[var(--text-secondary)]">{job.period}</p>
+                    <p className="text-sm text-[var(--text-tertiary)]">{job.location}</p>
                   </div>
                 </div>
                 <ul className="space-y-2">
                   {job.highlights.map((highlight, i) => (
-                    <li key={i} className="text-[#a0a0b0] flex gap-3">
-                      <span className="text-[#00d4aa] mt-1.5">▹</span>
+                    <li key={i} className="text-[var(--text-secondary)] flex gap-3">
+                      <span className="text-[var(--accent)] mt-1.5">▹</span>
                       <span>{highlight}</span>
                     </li>
                   ))}
@@ -224,49 +307,54 @@ function Experience() {
 
 // Projects Section
 function Projects() {
-  const { projects } = portfolioData;
+  const { projects, demos } = portfolioData;
 
   return (
     <section id="projects" className="py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#f0f0f5] mb-12 flex items-center gap-4">
-          <span className="font-mono text-[#00d4aa] text-xl">02.</span>
+        <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-12 flex items-center gap-4">
+          <span className="font-mono text-[var(--accent)] text-xl">02.</span>
           Projects
-          <div className="flex-1 h-px bg-[#252530] ml-4" />
+          <div className="flex-1 h-px bg-[var(--border)] ml-4" />
         </h2>
 
         <div className="grid md:grid-cols-2 gap-6">
           {projects.map((project, index) => (
             <div
               key={index}
-              className="bg-[#12121a] border border-[#252530] rounded-lg p-6 card-hover group"
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 card-hover group"
             >
               <div className="flex justify-between items-start mb-4">
-                <span className="px-3 py-1 text-xs font-mono bg-[#00d4aa]/10 text-[#00d4aa] rounded">
+                <span className="px-3 py-1 text-xs font-mono bg-[var(--accent-dim)] text-[var(--accent)] rounded">
                   {project.type}
                 </span>
                 {project.link && (
-                  <a 
+                  <a
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#606070] hover:text-[#00d4aa] transition-colors"
+                    className="text-[var(--text-tertiary)] hover:text-[var(--accent)] transition-colors"
                   >
                     <Icons.ExternalLink />
                   </a>
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-[#f0f0f5] mb-3 group-hover:text-[#00d4aa] transition-colors">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-3 group-hover:text-[var(--accent)] transition-colors">
                 {project.title}
               </h3>
-              <p className="text-[#a0a0b0] text-sm mb-4 leading-relaxed">
+              <p className="text-[var(--text-secondary)] text-sm mb-4 leading-relaxed">
                 {project.description}
               </p>
+              {project.videoUrl && (
+                <div className="mb-4">
+                  <VideoEmbed videoUrl={project.videoUrl} />
+                </div>
+              )}
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag, i) => (
                   <span
                     key={i}
-                    className="px-2 py-1 text-xs font-mono text-[#606070] bg-[#1a1a24] rounded"
+                    className="px-2 py-1 text-xs font-mono text-[var(--text-tertiary)] bg-[var(--bg-inner)] rounded"
                   >
                     {tag}
                   </span>
@@ -287,30 +375,30 @@ function Publications() {
   return (
     <section id="publications" className="py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#f0f0f5] mb-12 flex items-center gap-4">
-          <span className="font-mono text-[#00d4aa] text-xl">03.</span>
+        <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-12 flex items-center gap-4">
+          <span className="font-mono text-[var(--accent)] text-xl">03.</span>
           Publications
-          <div className="flex-1 h-px bg-[#252530] ml-4" />
+          <div className="flex-1 h-px bg-[var(--border)] ml-4" />
         </h2>
 
         <div className="space-y-6">
           {publications.map((pub, index) => (
             <div
               key={index}
-              className="bg-[#12121a] border border-[#252530] rounded-lg p-6 card-hover"
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 card-hover"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-[#f0f0f5] mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     {pub.title}
                   </h3>
-                  <p className="text-[#a0a0b0]">{pub.venue}</p>
+                  <p className="text-[var(--text-secondary)]">{pub.venue}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <span className="px-3 py-1 text-xs font-mono bg-[#00d4aa]/10 text-[#00d4aa] rounded">
+                  <span className="px-3 py-1 text-xs font-mono bg-[var(--accent-dim)] text-[var(--accent)] rounded">
                     {pub.type}
                   </span>
-                  <p className="font-mono text-sm text-[#606070] mt-2">{pub.year}</p>
+                  <p className="font-mono text-sm text-[var(--text-tertiary)] mt-2">{pub.year}</p>
                 </div>
               </div>
             </div>
@@ -328,24 +416,24 @@ function Skills() {
   return (
     <section id="skills" className="py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#f0f0f5] mb-12 flex items-center gap-4">
-          <span className="font-mono text-[#00d4aa] text-xl">04.</span>
+        <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-12 flex items-center gap-4">
+          <span className="font-mono text-[var(--accent)] text-xl">04.</span>
           Skills
-          <div className="flex-1 h-px bg-[#252530] ml-4" />
+          <div className="flex-1 h-px bg-[var(--border)] ml-4" />
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Object.entries(skills.technical).map(([category, items]) => (
             <div
               key={category}
-              className="bg-[#12121a] border border-[#252530] rounded-lg p-6"
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6"
             >
-              <h3 className="text-[#00d4aa] font-semibold mb-4">{category}</h3>
+              <h3 className="text-[var(--accent)] font-semibold mb-4">{category}</h3>
               <div className="flex flex-wrap gap-2">
                 {items.map((skill, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 text-sm text-[#a0a0b0] bg-[#1a1a24] rounded border border-[#252530]"
+                    className="px-3 py-1 text-sm text-[var(--text-secondary)] bg-[var(--bg-inner)] rounded border border-[var(--border)]"
                   >
                     {skill}
                   </span>
@@ -366,36 +454,28 @@ function Education() {
   return (
     <section className="py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#f0f0f5] mb-12 flex items-center gap-4">
-          <span className="font-mono text-[#00d4aa] text-xl">05.</span>
+        <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-12 flex items-center gap-4">
+          <span className="font-mono text-[var(--accent)] text-xl">05.</span>
           Education
-          <div className="flex-1 h-px bg-[#252530] ml-4" />
+          <div className="flex-1 h-px bg-[var(--border)] ml-4" />
         </h2>
 
-        <div className="space-y-6">
+        <div className="flex flex-wrap justify-center gap-4">
           {education.map((edu, index) => (
             <div
               key={index}
-              className="bg-[#12121a] border border-[#252530] rounded-lg p-6"
+              className="bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-6 flex-shrink-0"
             >
-              <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-[#f0f0f5]">
-                    {edu.degree}
-                  </h3>
-                  {edu.specialization && (
-                    <p className="text-[#00d4aa]">{edu.specialization}</p>
-                  )}
-                  <p className="text-[#a0a0b0]">{edu.institution}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-mono text-sm text-[#a0a0b0]">{edu.period}</p>
-                  <p className="text-[#00d4aa] font-semibold">{edu.gpa}</p>
-                </div>
-              </div>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)]">
+                {edu.degree}
+              </h3>
+              {edu.specialization && (
+                <p className="text-[var(--accent)] text-sm">{edu.specialization}</p>
+              )}
+              <p className="text-[var(--text-secondary)] text-sm">{edu.institution}</p>
               {edu.thesis && (
-                <p className="text-[#a0a0b0] text-sm mb-4">
-                  <span className="text-[#606070]">Thesis:</span> {edu.thesis}
+                <p className="text-[var(--text-secondary)] text-sm mt-2">
+                  <span className="text-[var(--text-tertiary)]">Thesis:</span> {edu.thesis}
                 </p>
               )}
             </div>
@@ -413,16 +493,16 @@ function Contact() {
   return (
     <section id="contact" className="py-20">
       <div className="max-w-2xl mx-auto px-6 text-center">
-        <p className="font-mono text-[#00d4aa] mb-4">06. What's Next?</p>
-        <h2 className="text-4xl font-bold text-[#f0f0f5] mb-6">Get In Touch</h2>
-        <p className="text-[#a0a0b0] mb-8 leading-relaxed">
+        <p className="font-mono text-[var(--accent)] mb-4">06. What's Next?</p>
+        <h2 className="text-4xl font-bold text-[var(--text-primary)] mb-6">Get In Touch</h2>
+        <p className="text-[var(--text-secondary)] mb-8 leading-relaxed">
           I'm currently open to new opportunities in robotics and AI. Whether you have a question
           or just want to say hi, I'll do my best to get back to you!
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <a
             href={`mailto:${personal.email}`}
-            className="px-8 py-4 border border-[#00d4aa] text-[#00d4aa] rounded-lg hover:bg-[#00d4aa]/10 transition-colors font-medium"
+            className="px-8 py-4 border border-[var(--accent)] text-[var(--accent)] rounded-lg hover:bg-[var(--accent-dim)] transition-colors font-medium"
           >
             Say Hello
           </a>
@@ -430,7 +510,7 @@ function Contact() {
             href={personal.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 bg-[#00d4aa] text-[#0a0a0f] rounded-lg hover:bg-[#00b090] transition-colors font-medium"
+            className="px-8 py-4 bg-[var(--accent)] text-[var(--bg-body)] rounded-lg hover:bg-[var(--accent-hover)] transition-colors font-medium"
           >
             Connect on LinkedIn
           </a>
@@ -443,12 +523,12 @@ function Contact() {
 // Footer
 function Footer() {
   return (
-    <footer className="py-8 border-t border-[#252530]">
+    <footer className="py-8 border-t border-[var(--border)]">
       <div className="max-w-6xl mx-auto px-6 text-center">
-        <p className="font-mono text-sm text-[#606070]">
+        <p className="font-mono text-sm text-[var(--text-tertiary)]">
           Built with Next.js & Tailwind CSS
         </p>
-        <p className="font-mono text-xs text-[#606070] mt-2">
+        <p className="font-mono text-xs text-[var(--text-tertiary)] mt-2">
           © {new Date().getFullYear()} Bruk Gebregziabher
         </p>
       </div>
