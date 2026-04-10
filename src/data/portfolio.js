@@ -139,31 +139,33 @@ export const portfolioData = {
       title: "VQA-driven Event Maps for Assistive Navigation for People with Low Vision in Urban Environments",
       venue: "2025 IEEE International Conference on Robotics and Automation (ICRA)",
       year: "2025",
-      type: "Conference"
+      type: "Conference",
+      link: "https://ieeexplore.ieee.org/document/11128754"
     },
     {
       title: "Motion as a Sensing Modality for Metric Scale in Monocular Visual-Inertial Odometry",
-      venue: "Preprint",
-      year: "2024",
-      type: "Preprint"
+      year: "2026",
+      type: "arXiv",
+      link: "https://arxiv.org/abs/2603.26740"
     },
     {
       title: "OPTED: Open Preprocessed Trachoma Eye Dataset Using Zero-Shot SAM 3 Segmentation",
-      venue: "Preprint",
-      year: "2024",
-      type: "Preprint"
+      year: "2026",
+      type: "arXiv",
+      link: "https://arxiv.org/abs/2603.06885"
     },
     {
       title: "Forecast-Driven MPC for Decentralized Multi-Robot Collision Avoidance",
       venue: "International Conference on Intelligent Robotics and Control Engineering (IRCE)",
       year: "2023",
-      type: "Conference"
+      type: "Conference",
+      link: "https://ieeexplore.ieee.org/abstract/document/11203067"
     },
     {
       title: "Multi Object Tracking for Predictive Collision Avoidance",
-      venue: "Preprint",
       year: "2023",
-      type: "Preprint"
+      type: "arXiv",
+      link: "https://arxiv.org/abs/2307.02161"
     }
   ],
 

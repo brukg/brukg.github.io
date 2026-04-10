@@ -390,9 +390,14 @@ function Publications() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
-                    {pub.title}
+                    {pub.link ? (
+                      <a href={pub.link} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)] transition-colors inline-flex items-baseline gap-1.5">
+                        {pub.title}
+                        <span className="inline-block self-center"><Icons.ExternalLink /></span>
+                      </a>
+                    ) : pub.title}
                   </h3>
-                  <p className="text-[var(--text-secondary)]">{pub.venue}</p>
+                  {pub.venue && <p className="text-[var(--text-secondary)]">{pub.venue}</p>}
                 </div>
                 <div className="text-right shrink-0">
                   <span className="px-3 py-1 text-xs font-mono bg-[var(--accent-dim)] text-[var(--accent)] rounded">
